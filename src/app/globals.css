@@ -1,0 +1,649 @@
+/* Tailwind utility classes */
+@import "tailwindcss";
+
+/* ===========================================================================
+   Design tokens (also available as Tailwind classes: text-cyan, bg-deep,
+   text-ice, font-display, ...). A Persona 3 palette: abyss to royal blue,
+   with cyan and white highlights.
+   =========================================================================== */
+@theme inline {
+  --font-display: var(--font-display-src);
+  --font-sans: var(--font-sans-src);
+
+  --color-abyss: #01061f;
+  --color-deep: #04124f;
+  --color-royal: #0a3cc2;
+  --color-azure: #1f74ff;
+  --color-cyan: #4fd8ff;
+  --color-ice: #d6f6ff;
+}
+
+/* ===========================================================================
+   Base
+   =========================================================================== */
+body {
+  background: var(--color-abyss);
+  color: #fff;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-cyan);
+  color: var(--color-deep);
+}
+
+/* ===========================================================================
+   Background: deep water (see Background.tsx)
+   =========================================================================== */
+.bg-root {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 70% 15%, #1756eb 0%, #0a2a9a 35%, #04124f 70%, #01061f 100%);
+  transition: filter 1.2s ease;
+}
+/* Big soft light blobs that drift around */
+.bg-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.5;
+  mix-blend-mode: screen;
+  animation: drift 20s ease-in-out infinite alternate;
+}
+@keyframes drift {
+  to {
+    transform: translate(8vw, -6vh) scale(1.25);
+  }
+}
+/* Slanted light rays sliding sideways */
+.bg-rays {
+  position: absolute;
+  inset: -50%;
+  background: repeating-linear-gradient(105deg, transparent 0 140px, rgba(150, 220, 255, 0.055) 140px 210px, transparent 210px 330px);
+  mix-blend-mode: screen;
+  animation: rays 26s linear infinite;
+}
+@keyframes rays {
+  to {
+    transform: translateX(342px); /* one repeat of the pattern, so the loop is seamless */
+  }
+}
+/* Water caustics: two ripple layers moving against each other */
+.bg-shimmer {
+  position: absolute;
+  inset: -25%;
+  background: repeating-radial-gradient(ellipse 160px 50px at 50% 50%, rgba(255, 255, 255, 0.04) 0 5px, transparent 5px 46px);
+  mix-blend-mode: screen;
+  animation: shimmer 14s ease-in-out infinite alternate;
+}
+.bg-shimmer-2 {
+  background-size: 130% 130%;
+  animation-duration: 19s;
+  animation-direction: alternate-reverse;
+  opacity: 0.7;
+}
+@keyframes shimmer {
+  to {
+    transform: translate(6%, 4%) rotate(4deg);
+  }
+}
+/* A faint diagonal band of light */
+.bg-band {
+  position: absolute;
+  left: -50%;
+  top: 52%;
+  width: 200%;
+  height: 30vh;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.07) 40%, rgba(79, 216, 255, 0.08) 60%, transparent);
+  transform: rotate(-12deg);
+}
+/* Darker edges */
+.bg-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 2, 15, 0.65) 100%);
+}
+/* The Dark Hour: the whole screen (background AND interface) turns an eerie
+   green. Whites stay white, blues and cyans shift to greens, so it stays coherent. */
+.dark-hour {
+  filter: hue-rotate(-95deg) saturate(0.9) brightness(0.85);
+  transition: filter 1.2s ease;
+}
+
+/* Hide scrollbars (screens can still scroll on very small windows) */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ===========================================================================
+   Shared pieces
+   =========================================================================== */
+
+/* Cyan label strip with a slanted right edge */
+.strip {
+  display: inline-block;
+  background: var(--color-cyan);
+  color: var(--color-deep);
+  padding: 0.3rem 1.4rem 0.3rem 0.8rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  clip-path: polygon(0 0, 100% 0, 92% 100%, 0 100%);
+}
+
+/* Inner screens: page padding (extra at the bottom for the prompts) */
+.screen-pad {
+  padding: 2.5rem 2rem 6rem;
+  max-width: 80rem;
+  margin: 0 auto;
+}
+@media (min-width: 768px) {
+  .screen-pad {
+    padding: 3rem 4rem 6rem;
+  }
+}
+
+/* Screen title: giant slanted italic with a royal blue offset shadow */
+.screen-title-wrap {
+  transform: rotate(-4deg);
+  transform-origin: left bottom;
+  animation: slide-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
+}
+.screen-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, min(9vw, 14vh), 8rem); /* shrinks on short windows too */
+  font-weight: 900;
+  font-style: italic;
+  line-height: 0.85;
+  text-transform: uppercase;
+  text-shadow: 0.05em 0.05em 0 var(--color-royal);
+}
+
+/* Translucent blue panel with a cyan border and a clipped corner */
+.panel {
+  position: relative;
+  background: linear-gradient(160deg, rgba(10, 60, 194, 0.55), rgba(4, 18, 79, 0.88));
+  border: 2px solid rgba(79, 216, 255, 0.5);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 3rem), calc(100% - 3rem) 100%, 0 100%);
+  backdrop-filter: blur(6px);
+  animation: panel-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
+}
+.panel-label {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-cyan);
+}
+
+/* Slanted tag */
+.chip {
+  display: inline-block;
+  padding: 0.25rem 0.9rem;
+  background: rgba(79, 216, 255, 0.14);
+  border: 1px solid rgba(79, 216, 255, 0.55);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  transform: skewX(-12deg);
+}
+
+/* Main action button: white slanted slab that turns cyan on hover */
+.p3-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #fff;
+  color: var(--color-deep);
+  padding: 0.6rem 2rem 0.6rem 1.2rem;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  clip-path: polygon(0 0, 100% 0, 92% 100%, 0 100%);
+  cursor: pointer;
+  transition: transform 0.15s, background 0.15s;
+}
+.p3-btn:hover {
+  transform: translateX(0.4rem);
+  background: var(--color-cyan);
+}
+
+/* Level pip: a slanted little bar, cyan when filled */
+.pip {
+  display: inline-block;
+  width: 1.7rem;
+  height: 0.65rem;
+  background: rgba(255, 255, 255, 0.15);
+  transform: skewX(-25deg);
+}
+.pip.on {
+  background: var(--color-cyan);
+  box-shadow: 0 0 8px rgba(79, 216, 255, 0.6);
+}
+.pip-sm {
+  width: 0.7rem;
+  height: 0.45rem;
+}
+
+/* Control hints (bottom right), on a soft dark fade so they never sit on top of busy content */
+.prompts {
+  padding: 0.6rem 0 0.6rem 2.5rem;
+  background: radial-gradient(ellipse at 70% 60%, rgba(1, 6, 31, 0.75), transparent 75%);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+}
+/* Mirrored version for the bottom-left corner (main menu) */
+.prompts-left {
+  padding: 0.6rem 2.5rem 0.6rem 0;
+  background: radial-gradient(ellipse at 30% 60%, rgba(1, 6, 31, 0.75), transparent 75%);
+}
+.key {
+  display: inline-flex;
+  min-width: 1.9rem;
+  height: 1.9rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.45rem;
+  border-radius: 9999px;
+  background: #fff;
+  color: var(--color-deep);
+  font-size: 0.8rem;
+  font-weight: 900;
+  font-style: normal;
+}
+
+/* ===========================================================================
+   Calendar (top left)
+   =========================================================================== */
+.date-in {
+  animation: slide-down 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
+}
+.date-num {
+  font-family: var(--font-display);
+  font-size: 4.5rem;
+  font-weight: 900;
+  font-style: italic;
+  line-height: 0.8;
+  text-shadow: 0.05em 0.05em 0 var(--color-royal);
+}
+.date-weekday {
+  background: #fff;
+  padding: 0.1rem 0.6rem;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 900;
+  font-style: italic;
+  transform: skewX(-12deg);
+}
+/* (the half-size main menu version is set with inline styles in DateDisplay.tsx) */
+.moon-btn {
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+.moon-btn:hover {
+  transform: scale(1.1) rotate(-8deg);
+}
+
+/* ===========================================================================
+   Main menu
+   =========================================================================== */
+/* The whole menu leans (clockwise, rising towards the left) */
+.menu {
+  transform: translateY(-50%) rotate(7deg);
+}
+/* The button itself is only the hit area: it never moves or grows when
+   selected, so neighbouring items' hover zones can't overlap or jump around
+   under the cursor. All the visuals live on the inner .menu-label. */
+.menu-item {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, min(8vw, 14vh), 8rem); /* shrinks on short windows too */
+  font-weight: 900;
+  font-style: italic;
+  line-height: 0.92;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+  animation: slide-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
+}
+.menu-label {
+  position: relative;
+  display: inline-block;
+  padding: 0.02em 0.25em;
+  color: #8fb8ff; /* unselected: light blue, readable but clearly not active */
+  text-shadow: 0.04em 0.04em 0 rgba(1, 6, 31, 0.6);
+  pointer-events: none; /* hovering is handled by the button only */
+  transition: transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.4), color 0.12s;
+}
+.menu-text {
+  position: relative;
+  z-index: 1; /* above the highlight bars */
+}
+/* Highlight: a cyan bar (::before) offset behind a white bar (::after). Both
+   are slanted parallelograms that shoot out from the left when selected. */
+.menu-label::before,
+.menu-label::after {
+  content: "";
+  position: absolute;
+  inset: 0.1em -0.2em 0.04em -0.3em;
+  clip-path: polygon(2% 10%, 100% 0, 97% 100%, 0 90%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+.menu-label::before {
+  background: var(--color-cyan);
+  translate: 0.16em 0.12em;
+}
+.menu-label::after {
+  background: #fff;
+}
+.menu-item.is-sel .menu-label {
+  color: var(--color-deep);
+  text-shadow: none;
+  transform: translateX(0.35em);
+}
+.menu-item.is-sel .menu-label::before,
+.menu-item.is-sel .menu-label::after {
+  transform: scaleX(1);
+}
+.menu-item.is-sel .menu-label::before {
+  transition-delay: 0.05s;
+  animation: jitter 2.4s steps(1) infinite;
+}
+/* Tiny twitch of the cyan bar, like the game's restless UI */
+@keyframes jitter {
+  0%, 100% { translate: 0.16em 0.12em; }
+  50% { translate: 0.2em 0.1em; }
+}
+
+/* ===========================================================================
+   Name marquee (see NameMarquee.tsx): giant scrolling rows of your name
+   behind the main menu
+   =========================================================================== */
+.nm-root {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+/* Oversized and tilted, so the rows still reach every corner after rotating */
+.nm-tilt {
+  position: absolute;
+  inset: -35% -20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5vh;
+  transform: rotate(-8deg);
+}
+/* Each row floats up and down a little, like it's on water */
+.nm-row {
+  animation: nm-bob 5s ease-in-out infinite alternate;
+}
+@keyframes nm-bob {
+  from {
+    transform: translateY(-1vh);
+  }
+  to {
+    transform: translateY(1vh);
+  }
+}
+/* The scrolling strip: slides left by half its width (one copy of the text), then loops */
+.nm-track {
+  display: flex;
+  width: max-content;
+  animation: nm-scroll linear infinite;
+}
+@keyframes nm-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.nm-unit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding-right: 0.3em;
+  font-family: var(--font-display);
+  font-size: 15vh;
+  font-weight: 900;
+  font-style: italic;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+/* Solid word: faint cyan fill with a soft outline */
+.nm-a {
+  color: rgba(79, 216, 255, 0.1);
+  -webkit-text-stroke: 1px rgba(214, 246, 255, 0.15);
+}
+/* Outlined word: hollow with a brighter outline */
+.nm-b {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(214, 246, 255, 0.3);
+}
+/* Even rows swap which word is solid and which is outlined (woven look) */
+.nm-row:nth-child(even) .nm-a {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(214, 246, 255, 0.3);
+}
+.nm-row:nth-child(even) .nm-b {
+  color: rgba(79, 216, 255, 0.1);
+  -webkit-text-stroke: 1px rgba(214, 246, 255, 0.15);
+}
+/* Small diamond between the words */
+.nm-sep {
+  font-size: 0.3em;
+  font-style: normal;
+  color: rgba(79, 216, 255, 0.4);
+}
+.name-in {
+  animation: slide-in 0.6s 0.3s cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
+}
+
+/* Help bar along the bottom: a white slab that runs off the right edge,
+   with its slanted end on the left */
+.help-bar {
+  background: #fff;
+  color: var(--color-deep);
+  padding: 0.6rem 5vw 0.6rem 3rem;
+  clip-path: polygon(4% 0, 100% 0, 100% 100%, 0 100%);
+  text-align: right;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  animation: slide-in-right 0.5s 0.2s cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
+}
+.help-text {
+  display: inline-block;
+  animation: fade-up 0.25s ease-out;
+}
+
+/* ===========================================================================
+   List rows (projects) and stat rows
+   =========================================================================== */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background: rgba(4, 18, 79, 0.6);
+  border-left: 5px solid rgba(79, 216, 255, 0.4);
+  clip-path: polygon(0 0, 100% 0, 97% 100%, 0 100%);
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 800;
+  font-style: italic;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.4), background 0.12s, color 0.12s;
+  animation: slide-in 0.45s cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
+}
+.row-index {
+  font-size: 1rem;
+  color: var(--color-cyan);
+}
+.row.is-sel {
+  background: #fff;
+  color: var(--color-deep);
+  border-left-color: var(--color-cyan);
+  transform: translateX(1.2rem);
+}
+.row.is-sel .row-index {
+  color: var(--color-royal);
+}
+
+.stat-row {
+  padding: 0.6rem 1.5rem;
+  background: rgba(4, 18, 79, 0.6);
+  border-left: 5px solid rgba(79, 216, 255, 0.4);
+  clip-path: polygon(0 0, 100% 0, 98% 100%, 0 100%);
+  transition: transform 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.4), background 0.12s, color 0.12s;
+  animation: slide-in 0.45s cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
+}
+.stat-row.is-sel {
+  background: #fff;
+  color: var(--color-deep);
+  border-left-color: var(--color-cyan);
+  transform: translateX(1rem);
+}
+.stat-row.is-sel .pip:not(.on) {
+  background: rgba(4, 18, 79, 0.15);
+}
+.stat-row.is-sel .pip.on {
+  background: var(--color-royal);
+  box-shadow: none;
+}
+
+/* ===========================================================================
+   Tarot cards (Social Link)
+   =========================================================================== */
+/* Card size follows the window height so the whole card always fits */
+.tarot {
+  --card-h: clamp(17rem, 52vh, 24rem);
+  display: flex;
+  width: calc(var(--card-h) * 0.63);
+  height: var(--card-h);
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.4rem 1.2rem;
+  background: linear-gradient(170deg, #0d47d9, #04124f 70%);
+  border: 3px solid rgba(214, 246, 255, 0.55);
+  outline: 1px solid rgba(214, 246, 255, 0.25);
+  outline-offset: -11px; /* inner frame line */
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.4), border-color 0.2s, box-shadow 0.25s;
+  animation: card-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
+}
+.tarot.is-sel {
+  transform: translateY(-1.2rem) rotate(-3deg) scale(1.04);
+  border-color: #fff;
+  box-shadow: 0 0 0 4px var(--color-cyan), 0 30px 50px -18px rgba(0, 0, 0, 0.7), 0 0 70px rgba(79, 216, 255, 0.35);
+}
+/* Emblem circle, scaled with the card */
+.tarot-emblem {
+  width: calc(var(--card-h) * 0.3);
+  height: calc(var(--card-h) * 0.3);
+}
+/* Dashed ring around the emblem, spinning slowly (faster when selected) */
+.tarot-ring {
+  border: 2px dashed rgba(214, 246, 255, 0.5);
+  border-radius: 9999px;
+  animation: spin 18s linear infinite;
+}
+.tarot.is-sel .tarot-ring {
+  border-color: var(--color-cyan);
+  animation-duration: 6s;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===========================================================================
+   Screen transition: two slanted slabs sweep across (white, then cyan)
+   =========================================================================== */
+.wipe {
+  position: absolute;
+  inset: -20% -40%;
+  transform: skewX(-20deg) translateX(-140%);
+  animation: wipe 0.6s cubic-bezier(0.75, 0, 0.25, 1) forwards;
+}
+.wipe-white {
+  background: #fff;
+}
+.wipe-cyan {
+  background: var(--color-cyan);
+  animation-delay: 0.05s;
+}
+@keyframes wipe {
+  45%,
+  55% {
+    transform: skewX(-20deg) translateX(0);
+  }
+  100% {
+    transform: skewX(-20deg) translateX(140%);
+  }
+}
+
+/* ===========================================================================
+   Entrance animations
+   =========================================================================== */
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(4rem);
+  }
+}
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-2rem);
+  }
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.4rem);
+  }
+}
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateX(2rem) skewX(-4deg);
+  }
+}
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(3rem) rotate(6deg);
+  }
+}
