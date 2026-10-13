@@ -31,7 +31,7 @@ export default function MainMenu({ active, initial, onSelect }: Props) {
   const { sel, hover } = useListNav({ count: ITEMS.length, active, initial, onConfirm: (i) => onSelect(ITEMS[i].id, i) });
 
   return (
-    <div className="relative h-full w-full">
+    <div className="menu-screen relative h-full w-full">
 
       {/* Mini "Who I Am" card, on the right, a little above the middle:
           name, role and motto on the left, the photo on the right.
