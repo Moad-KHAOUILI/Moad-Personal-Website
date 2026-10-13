@@ -22,8 +22,7 @@ export function useTouch() {
   );
 }
 
-// True on a touch screen held upright, where the whole page is laid out wider and
-// scaled down by the phone (see PhoneViewport), so nothing needs scaling itself
+// True on a touch screen held upright (see FitScreen's portraitScale)
 const PORTRAIT_QUERY = `${QUERY} and (orientation: portrait)`;
 
 export function usePortraitPhone() {
