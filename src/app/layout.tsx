@@ -6,7 +6,6 @@
 
 import type { Metadata } from "next";
 import { Barlow_Condensed, Chakra_Petch, Space_Grotesk } from "next/font/google";
-import PhoneViewport from "@/components/PhoneViewport";
 import "./globals.css";
 
 // Headings and menus: heavy, condensed and italic, close to Persona's UI lettering
@@ -31,10 +30,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${sans.variable} ${dialogue.variable}`}>
-      <body>
-        <PhoneViewport />
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
