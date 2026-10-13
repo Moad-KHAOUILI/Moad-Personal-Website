@@ -1303,6 +1303,33 @@ body {
   stroke-linejoin: round;
 }
 
+/* Logo, long form (see Logo.tsx): the MK mark beside the name, tilted a little like the screen titles */
+.logo-long {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  transform: rotate(-3deg);
+}
+.logo-long-mark {
+  height: 3.6rem;
+  flex-shrink: 0;
+}
+.logo-long-name {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 900;
+  font-style: italic;
+  line-height: 0.9;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow: 0.05em 0.05em 0 var(--color-royal);
+}
+.logo-long-role {
+  margin-top: 0.35rem;
+  padding: 0.1rem 1.1rem 0.1rem 0.6rem;
+  font-size: 0.8rem;
+}
+
 /* ===========================================================================
    Phones and small windows. Kept last so these override everything above.
    (The side-by-side layouts switch with the "wide:" variant defined at the top)
