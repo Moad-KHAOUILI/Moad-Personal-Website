@@ -3,10 +3,12 @@
 // ---------------------------------------------------------------------------
 // Shrinks a screen's content (with CSS zoom, so the layout reflows) until it
 // fits the window, so no screen ever needs scrolling. Never grows past `max`.
-// It goes inside .screen-pad, whose bottom padding keeps room for the key prompts.
+// It goes inside .screen-pad, whose padding keeps room for the back arrow and
+// the key prompts.
 // ---------------------------------------------------------------------------
 
 import { useLayoutEffect, useRef } from "react";
+import { fitZoom, refitOnChange } from "@/lib/fitZoom";
 
 export default function FitScreen({ children, max = 1 }: { children: React.ReactNode; max?: number }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -16,35 +18,16 @@ export default function FitScreen({ children, max = 1 }: { children: React.React
     if (!el) return;
 
     const fit = () => {
-      const bottom = parseFloat(getComputedStyle(el.parentElement!).paddingBottom);
-      const available = window.innerHeight - el.getBoundingClientRect().top - bottom;
-      // offsetHeight is in the element's own (unzoomed) pixels, and zooming out widens
-      // the content, which shortens it. A few rounds settle on the right zoom.
-      const apply = (z: number) => {
-        el.style.zoom = String(z);
-        return z * el.offsetHeight;
-      };
-      let zoom = max;
-      for (let i = 0; i < 4; i++) {
-        const next = Math.min(max, available / (apply(zoom) / zoom));
-        if (Math.abs(next - zoom) < 0.002) break;
-        zoom = next;
-      }
-      // Then step down until it really fits, so it's never a few pixels too tall
-      while (apply(zoom) > available && zoom > 0.3) zoom -= 0.005;
+      // The room left inside the screen once the padding is taken off
+      const pad = getComputedStyle(el.parentElement!);
+      const area = el.closest(".no-scrollbar")?.clientHeight ?? window.innerHeight;
+      const available = area - parseFloat(pad.paddingTop) - parseFloat(pad.paddingBottom);
+      const zoom = fitZoom(el, el, available, max, 0.3);
       // Exposed to CSS, for things that should keep their size whatever the zoom (the sideways title on landscape phones)
       el.style.setProperty("--fit-zoom", String(zoom));
     };
 
-    fit();
-    // Refit when the window changes, and when the content does (tab switches, fonts loading)
-    const observer = new ResizeObserver(fit);
-    observer.observe(el);
-    window.addEventListener("resize", fit);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", fit);
-    };
+    return refitOnChange(el, fit);
   }, [max]);
 
   return <div ref={ref}>{children}</div>;
