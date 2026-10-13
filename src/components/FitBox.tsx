@@ -9,6 +9,7 @@
 // ---------------------------------------------------------------------------
 
 import { useLayoutEffect, useRef } from "react";
+import { fitZoom, refitOnChange } from "@/lib/fitZoom";
 
 const MIN_ZOOM = 0.5; // below this it stops shrinking (the parent can still scroll as a last resort)
 
@@ -18,27 +19,8 @@ export default function FitBox({ children, stretch }: { children: React.ReactNod
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
-
-    const fit = () => {
-      // scrollHeight and clientHeight are both in the box's own (zoomed) pixels, and a smaller
-      // zoom gives the content more of them, so a few rounds settle on the right size
-      let zoom = 1;
-      el.style.zoom = "1";
-      for (let i = 0; i < 6 && el.scrollHeight > el.clientHeight + 1 && zoom > MIN_ZOOM; i++) {
-        zoom = Math.max(MIN_ZOOM, zoom * (el.clientHeight / el.scrollHeight) * 0.99);
-        el.style.zoom = String(zoom);
-      }
-    };
-
-    fit();
-    // Refit when the window changes, and when the content does (switching screenshots, fonts loading)
-    const observer = new ResizeObserver(fit);
-    observer.observe(el.firstElementChild!);
-    window.addEventListener("resize", fit);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", fit);
-    };
+    const content = el.firstElementChild as HTMLElement;
+    return refitOnChange(el, () => fitZoom(el, content, el.parentElement!.clientHeight, 1, MIN_ZOOM), content);
   }, []);
 
   // The inner grid is at least the box's height and grows with the content, so the overflow can

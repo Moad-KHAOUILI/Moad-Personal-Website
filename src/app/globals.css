@@ -1361,7 +1361,7 @@ body {
    (The side-by-side layouts switch with the "wide:" variant defined at the top)
    =========================================================================== */
 
-/* Long motto lines may wrap on narrow cards instead of running into the next column */
+/* Long motto lines can wrap on narrow cards instead of running into the next column */
 .motto-line {
   flex-wrap: wrap;
 }
@@ -1514,5 +1514,19 @@ body {
   }
   .help-bar {
     bottom: 1.25rem;
+  }
+
+  /* Phones redraw blurs every frame, so behind animated layers they stutter and make
+     everything look like it's shivering. The frosted-glass panels get a solid background
+     instead, and the background's big blurred, blended layers hold still (the scrolling
+     name stays) */
+  .panel {
+    backdrop-filter: none;
+    background: linear-gradient(160deg, #0a2a9a, #04124f 70%);
+  }
+  .bg-blob,
+  .bg-rays,
+  .bg-shimmer {
+    animation: none;
   }
 }
