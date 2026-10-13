@@ -6,7 +6,6 @@
 //   - slanted light rays sliding sideways
 //   - two rippling shimmer layers moving against each other (water caustics)
 //   - a faint diagonal light band and a dark vignette around the edges
-// During the Dark Hour the whole thing is hue-shifted to sickly green.
 // ---------------------------------------------------------------------------
 
 export default function Background() {
