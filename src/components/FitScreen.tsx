@@ -3,7 +3,8 @@
 // ---------------------------------------------------------------------------
 // Shrinks a screen's content (with CSS zoom, so the layout reflows) until it
 // fits the window, so no screen needs scrolling with a mouse. Never grows past `max`.
-// On touch screens it stops at a still-readable size and the screen scrolls instead.
+// On touch screens it stops at a still-readable size (or uses the page's fixed
+// `touchZoom`) and the screen scrolls instead.
 // It goes inside .screen-pad, whose padding keeps room for the back arrow and
 // the key prompts.
 // ---------------------------------------------------------------------------
@@ -11,12 +12,24 @@
 import { useLayoutEffect, useRef } from "react";
 import { fitZoom, isTouch, refitOnChange, TOUCH_MIN_ZOOM } from "@/lib/fitZoom";
 
-export default function FitScreen({ children, max = 1 }: { children: React.ReactNode; max?: number }) {
+type Props = {
+  children: React.ReactNode;
+  max?: number;
+  touchZoom?: number; // on touch screens: this fixed size instead of fitting (taller content scrolls)
+};
+
+export default function FitScreen({ children, max = 1, touchZoom }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
+
+    if (touchZoom && isTouch()) {
+      el.style.zoom = String(touchZoom);
+      el.style.setProperty("--fit-zoom", String(touchZoom));
+      return;
+    }
 
     const fit = () => {
       // The room left inside the screen once the padding is taken off
@@ -29,7 +42,7 @@ export default function FitScreen({ children, max = 1 }: { children: React.React
     };
 
     return refitOnChange(el, fit);
-  }, [max]);
+  }, [max, touchZoom]);
 
   return <div ref={ref}>{children}</div>;
 }

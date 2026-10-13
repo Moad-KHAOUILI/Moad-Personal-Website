@@ -70,7 +70,7 @@ export default function Stats({ active, onBack }: { active: boolean; onBack: () 
 
   return (
     <div className="screen-pad">
-      <FitScreen>
+      <FitScreen touchZoom={0.85}>
         <ScreenTitle title="Technical Skills" subtitle="Always learning and improving" />
 
         {fits ? (

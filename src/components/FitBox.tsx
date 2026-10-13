@@ -4,15 +4,15 @@
 // Like FitScreen, but for a box: fills its parent's height and, if its content
 // is taller than that, shrinks it (CSS zoom, so the layout reflows) until it
 // fits. Used for the project file's sections, so they don't scroll with a mouse
-// (on touch screens they stop at a readable size and scroll instead).
+// (on touch screens nothing shrinks: the whole page scrolls instead).
 // With `stretch`, content that already fits is stretched to the full height,
 // so layouts like the media viewer fill the box.
 // ---------------------------------------------------------------------------
 
 import { useLayoutEffect, useRef } from "react";
-import { fitZoom, isTouch, refitOnChange, TOUCH_MIN_ZOOM } from "@/lib/fitZoom";
+import { fitZoom, isTouch, refitOnChange } from "@/lib/fitZoom";
 
-const MIN_ZOOM = 0.5; // below this it stops shrinking and the parent scrolls instead (sooner on touch screens)
+const MIN_ZOOM = 0.5; // below this it stops shrinking and the parent scrolls instead
 
 export default function FitBox({ children, stretch }: { children: React.ReactNode; stretch?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -21,8 +21,8 @@ export default function FitBox({ children, stretch }: { children: React.ReactNod
     const el = ref.current;
     if (!el) return;
     const content = el.firstElementChild as HTMLElement;
-    const min = isTouch() ? TOUCH_MIN_ZOOM : MIN_ZOOM;
-    return refitOnChange(el, () => fitZoom(el, content, el.parentElement!.clientHeight, 1, min), content);
+    if (isTouch()) return; // phones: the whole project page has a fixed size and scrolls (see .detail-body)
+    return refitOnChange(el, () => fitZoom(el, content, el.parentElement!.clientHeight, 1, MIN_ZOOM), content);
   }, []);
 
   // The inner grid is at least the box's height and grows with the content, so the overflow can

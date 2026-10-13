@@ -40,34 +40,37 @@ export default function ProjectDetail({ project: p, active, onBack }: Props) {
   }, [zoom]);
 
   return (
-    <div className="screen-pad flex h-full flex-col">
-      <ScreenTitle title={p.name} subtitle="Project file" />
+    <div className="screen-pad detail-pad flex h-full flex-col">
+      {/* Title and dossier. On phones this is scaled to 75% and the page scrolls as a whole (see .detail-body) */}
+      <div className="detail-body flex min-h-0 flex-1 flex-col">
+        <ScreenTitle title={p.name} subtitle="Project file" />
 
-      {/* Dossier: one fixed-size panel with the section tabs and the selected section */}
-      <div className="mt-5 flex min-h-0 flex-1 flex-col">
-        <div className="panel dossier flex min-h-0 flex-1 flex-col p-6">
-          <div className="flex flex-wrap gap-x-1 gap-y-2">
-            {SECTIONS.map((s, i) => (
-              <button
-                key={s}
-                onMouseEnter={() => hover(i)}
-                onClick={() => setSel(i)}
-                className={`sec-tab ${sel === i ? "is-sel" : ""}`}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-          {/* key={sel} replays the entrance animation. The section shrinks to fit the panel (FitBox),
-              and only scrolls as a last resort on very small windows */}
-          <div key={sel} className="sec-body no-scrollbar mt-5 min-h-0 flex-1 overflow-y-auto">
-            <FitBox stretch={sel === 0}>
-              {sel === 0 && <Overview p={p} shot={shot} setShot={setShot} onZoom={setZoom} />}
-              {sel === 1 && <Features p={p} />}
-              {sel === 2 && <Stack p={p} />}
-              {sel === 3 && <Architecture p={p} />}
-              {sel === 4 && <Learned p={p} />}
-            </FitBox>
+        {/* Dossier: one fixed-size panel with the section tabs and the selected section */}
+        <div className="mt-5 flex min-h-0 flex-1 flex-col">
+          <div className="panel dossier flex min-h-0 flex-1 flex-col p-6">
+            <div className="flex flex-wrap gap-x-1 gap-y-2">
+              {SECTIONS.map((s, i) => (
+                <button
+                  key={s}
+                  onMouseEnter={() => hover(i)}
+                  onClick={() => setSel(i)}
+                  className={`sec-tab ${sel === i ? "is-sel" : ""}`}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+            {/* key={sel} replays the entrance animation. The section shrinks to fit the panel (FitBox),
+                and only scrolls as a last resort on very small windows */}
+            <div key={sel} className="sec-body no-scrollbar mt-5 min-h-0 flex-1 overflow-y-auto">
+              <FitBox stretch={sel === 0}>
+                {sel === 0 && <Overview p={p} shot={shot} setShot={setShot} onZoom={setZoom} />}
+                {sel === 1 && <Features p={p} />}
+                {sel === 2 && <Stack p={p} />}
+                {sel === 3 && <Architecture p={p} />}
+                {sel === 4 && <Learned p={p} />}
+              </FitBox>
+            </div>
           </div>
         </div>
       </div>
@@ -124,11 +127,12 @@ function Media({ item, onZoom }: { item?: Project["media"][number]; onZoom: (src
   );
 }
 
-// Overview: the media viewer (selected item big, the rest as thumbnails underneath) beside the summary
+// Overview: the media viewer (selected item big, the rest as thumbnails underneath) beside the summary.
+// The columns are capped at the panel width, so a long row of thumbnails shrinks instead of widening it
 type OverviewProps = { p: Project; shot: number; setShot: (i: number) => void; onZoom: (src: string) => void };
 function Overview({ p, shot, setShot, onZoom }: OverviewProps) {
   return (
-    <div className="grid gap-6 wide:h-full wide:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)]">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-6 wide:h-full wide:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)]">
       <div className="flex min-h-0 flex-col gap-3">
         <div className="media-frame min-h-[12rem] flex-1">
           {/* key resets the portrait check when switching items */}

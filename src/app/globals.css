@@ -628,6 +628,7 @@ body {
   border-bottom-color: var(--color-cyan);
 }
 .sec-body {
+  overflow-x: hidden; /* never scrolls sideways */
   animation: fade-up 0.25s ease-out backwards;
 }
 .feature,
@@ -1367,7 +1368,7 @@ body {
    (The side-by-side layouts switch with the "wide:" variant defined at the top)
    =========================================================================== */
 
-/* Long motto lines can wrap on narrow cards instead of running into the next column */
+/* Long motto lines may wrap on narrow cards instead of running into the next column */
 .motto-line {
   flex-wrap: wrap;
 }
@@ -1554,5 +1555,80 @@ body {
   .bg-rays,
   .bg-shimmer {
     animation: none;
+  }
+
+  /* Main menu: the Who I Am card and the menu stop being placed separately and are stacked
+     in one centred column (side by side in landscape), both at 75%, so they can never overlap
+     whatever the screen size. Room is kept for the date above and the help bar below */
+  .menu-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2.6rem;
+    padding: 6.5rem 1rem 5rem;
+  }
+  .menu-screen .mini-wrap {
+    position: static;
+    display: flex;
+    transform: none;
+    zoom: 0.75;
+  }
+  .menu-screen .mini-wrap .portrait-sm {
+    width: 7.5rem;
+  }
+  .menu-screen .menu {
+    position: static;
+    transform: rotate(7deg);
+    zoom: 0.75;
+    margin-right: 2.5rem; /* (balances the staircase, which steps out to the right) */
+  }
+  .menu-screen .menu-item {
+    font-size: 3.7rem;
+    white-space: nowrap;
+  }
+
+  /* Project file: the title and dossier at 75%, laid out at their natural height, and the
+     page scrolls as a whole (no scrolling inside the panel, and never sideways) */
+  .detail-pad {
+    height: auto;
+  }
+  .detail-body {
+    --fit-zoom: 0.75;
+    zoom: 0.75;
+    flex: none;
+  }
+  .detail-body > div,
+  .detail-body .dossier {
+    flex: none;
+  }
+  .dossier .sec-body {
+    flex: none;
+    overflow: visible;
+  }
+  .sec-body .strip {
+    white-space: normal;
+  }
+
+  /* Projects: the quick view dropping down under the tapped row */
+  .quick-drop {
+    animation: slide-down 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+}
+
+/* Main menu on landscape phones: the menu and the card side by side */
+@media (hover: none) and (pointer: coarse) and (orientation: landscape) {
+  .menu-screen {
+    flex-direction: row;
+    justify-content: space-evenly;
+    gap: 1.5rem;
+    padding: 4.4rem 3vw 4.4rem;
+  }
+  .menu-screen .menu {
+    order: -1; /* menu on the left, as on desktop */
+    margin-right: 0;
+  }
+  .menu-screen .menu-item {
+    font-size: min(3.7rem, 13vh);
   }
 }
