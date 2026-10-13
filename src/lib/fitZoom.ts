@@ -10,6 +10,11 @@
 
 const TOLERANCE = 0.01; // zoom changes smaller than this are ignored, so refits settle instead of flickering
 
+// On touch screens, text shrunk much further than this gets hard to read, so content that still
+// doesn't fit scrolls instead (scrolling is natural there). Mouse screens shrink all the way to fit
+export const TOUCH_MIN_ZOOM = 0.85;
+export const isTouch = () => typeof window !== "undefined" && matchMedia("(hover: none) and (pointer: coarse)").matches;
+
 // `el` gets the zoom; `content` is what's measured (el itself, or a wrapper inside it)
 export function fitZoom(el: HTMLElement, content: HTMLElement, available: number, max: number, min: number) {
   const prev = el.style.zoom ? Number(el.style.zoom) : null;
