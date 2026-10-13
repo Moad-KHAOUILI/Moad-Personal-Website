@@ -1374,7 +1374,7 @@ html {
    (The side-by-side layouts switch with the "wide:" variant defined at the top)
    =========================================================================== */
 
-/* Long motto lines can wrap on narrow cards instead of running into the next column */
+/* Long motto lines may wrap on narrow cards instead of running into the next column */
 .motto-line {
   flex-wrap: wrap;
 }
@@ -1417,26 +1417,6 @@ html {
   .help-bar {
     bottom: 4.2rem;
     font-size: 1.05rem;
-  }
-
-  /* About card: name beside a smaller photo, then the motto and the languages each get the
-     full width (the languages side by side) instead of sharing two narrow columns */
-  .intro-grid .portrait {
-    width: 8.5rem;
-  }
-  .intro-grid > :nth-child(3),
-  .intro-grid > :nth-child(4) {
-    grid-column: 1 / -1;
-    width: auto;
-  }
-  .intro-grid > :nth-child(4) ul {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  /* (each language's level badge drops below its name, so the three fit side by side) */
-  .intro-grid .lang > span:first-child {
-    flex-wrap: wrap;
-    row-gap: 0.35rem;
   }
 
   /* Other Projects: a short picture strip of fixed height, so the text gets the room (tap to see

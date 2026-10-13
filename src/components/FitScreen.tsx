@@ -15,20 +15,30 @@ import { fitZoom, isTouch, refitOnChange, TOUCH_MIN_ZOOM } from "@/lib/fitZoom";
 type Props = {
   children: React.ReactNode;
   max?: number;
-  touchZoom?: number; // on touch screens: this fixed size instead of fitting (taller content scrolls)
+  // On touch screens: this fixed size instead of fitting (taller content scrolls).
+  // A number, or a size per orientation
+  touchZoom?: number | { portrait: number; landscape: number };
 };
 
 export default function FitScreen({ children, max = 1, touchZoom }: Props) {
   const ref = useRef<HTMLDivElement>(null);
+  const portraitZoom = typeof touchZoom === "object" ? touchZoom.portrait : touchZoom;
+  const landscapeZoom = typeof touchZoom === "object" ? touchZoom.landscape : touchZoom;
 
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    if (touchZoom && isTouch()) {
-      el.style.zoom = String(touchZoom);
-      el.style.setProperty("--fit-zoom", String(touchZoom));
-      return;
+    if (portraitZoom && landscapeZoom && isTouch()) {
+      // Reapplied when the phone is turned
+      const apply = () => {
+        const z = String(matchMedia("(orientation: portrait)").matches ? portraitZoom : landscapeZoom);
+        el.style.zoom = z;
+        el.style.setProperty("--fit-zoom", z);
+      };
+      apply();
+      window.addEventListener("resize", apply);
+      return () => window.removeEventListener("resize", apply);
     }
 
     const fit = () => {
@@ -42,7 +52,7 @@ export default function FitScreen({ children, max = 1, touchZoom }: Props) {
     };
 
     return refitOnChange(el, fit);
-  }, [max, touchZoom]);
+  }, [max, portraitZoom, landscapeZoom]);
 
   return <div ref={ref}>{children}</div>;
 }
