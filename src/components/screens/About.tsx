@@ -52,14 +52,14 @@ export default function About({ active, onBack }: { active: boolean; onBack: () 
   return (
     <div className="screen-pad">
       {/* Everything except the key prompts: at most 85%, smaller if needed to fit the window */}
-      <FitScreen max={0.85} touchZoom={0.5}>
+      <FitScreen max={0.85} touchZoom={{ portrait: 0.25, landscape: 0.5 }}>
         <ScreenTitle title="About Me" subtitle="The story so far" />
 
         <div className="mt-6 grid gap-8 wide:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] wide:gap-12">
           {/* Intro card: name, photo, motto, languages and story progress */}
           <div className="panel intro-card p-8">
             {/* Two columns: name and motto on the left, photo and languages stacked on the right */}
-            <div className="intro-grid grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-6 gap-y-8">
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-6 gap-y-8">
               <div className="intro-head flex flex-col">
                 <span className="panel-label">Who I Am</span>
                 <h2 className="mt-2 font-display text-5xl font-black uppercase italic leading-none md:text-6xl">
