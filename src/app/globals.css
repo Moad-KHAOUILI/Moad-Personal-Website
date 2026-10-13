@@ -46,6 +46,12 @@ html,
 body {
   overscroll-behavior: none;
 }
+/* iPhones enlarge text they think is too small ("text autosizing"), which undid the phone
+   scaling: scaled-down pages got big text in small boxes. Text keeps the size it's given */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 
 ::selection {
   background: var(--color-cyan);
@@ -1368,7 +1374,7 @@ body {
    (The side-by-side layouts switch with the "wide:" variant defined at the top)
    =========================================================================== */
 
-/* Long motto lines may wrap on narrow cards instead of running into the next column */
+/* Long motto lines can wrap on narrow cards instead of running into the next column */
 .motto-line {
   flex-wrap: wrap;
 }
@@ -1565,7 +1571,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2.6rem;
+    gap: 1.6rem;
     padding: 6.5rem 1rem 5rem;
   }
   .menu-screen .mini-wrap {
@@ -1577,14 +1583,20 @@ body {
   .menu-screen .mini-wrap .portrait-sm {
     width: 7.5rem;
   }
+  /* The menu: a straight, centred column right under the card (no tilt, no staircase),
+     sized from the screen width so the longest option always fits */
   .menu-screen .menu {
     position: static;
-    transform: rotate(7deg);
-    zoom: 0.75;
-    margin-right: 2.5rem; /* (balances the staircase, which steps out to the right) */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    transform: none;
+    zoom: 1;
   }
   .menu-screen .menu-item {
-    font-size: 3.7rem;
+    margin-left: 0 !important; /* (the staircase offsets are inline styles) */
+    font-size: min(8.5vw, 2.6rem);
     white-space: nowrap;
   }
 
@@ -1626,9 +1638,8 @@ body {
   }
   .menu-screen .menu {
     order: -1; /* menu on the left, as on desktop */
-    margin-right: 0;
   }
   .menu-screen .menu-item {
-    font-size: min(3.7rem, 13vh);
+    font-size: min(2.6rem, 11vh, 5vw);
   }
 }
