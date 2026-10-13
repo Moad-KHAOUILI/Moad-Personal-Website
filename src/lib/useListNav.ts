@@ -55,5 +55,5 @@ export function useListNav({ count, active, initial = 0, onConfirm, onBack }: Op
     sfx.move();
   };
 
-  return { sel, hover };
+  return { sel, setSel, hover };
 }
