@@ -59,7 +59,7 @@ export default function About({ active, onBack }: { active: boolean; onBack: () 
           {/* Intro card: name, photo, motto, languages and story progress */}
           <div className="panel intro-card p-8">
             {/* Two columns: name and motto on the left, photo and languages stacked on the right */}
-            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-6 gap-y-8">
+            <div className="intro-grid grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-6 gap-y-8">
               <div className="intro-head flex flex-col">
                 <span className="panel-label">Who I Am</span>
                 <h2 className="mt-2 font-display text-5xl font-black uppercase italic leading-none md:text-6xl">

@@ -86,7 +86,7 @@ export default function Home() {
       )}
 
       {/* The current screen. key={screen} remounts it so its entrance animations play */}
-      <div key={screen} className="no-scrollbar relative h-full w-full overflow-y-auto overflow-x-hidden">
+      <div key={screen} className="no-scrollbar relative h-full w-full overflow-y-auto overflow-x-hidden overscroll-contain">
         {screen === "menu" && (
           <MainMenu
             active={active}
