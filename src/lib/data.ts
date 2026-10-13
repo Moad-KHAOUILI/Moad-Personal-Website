@@ -402,16 +402,17 @@ export const projects: Project[] = [
 ];
 
 // OTHER PROJECTS: smaller projects, reached from the "Other projects" row at the
-// bottom of the Projects list. Each one is a card with one image and a short text.
-//   image: put the file in /public (e.g. /projects/flightdelay/dashboard.png) and set `src`.
-//          An empty `src` shows an "image coming soon" placeholder.
+// bottom of the Projects list. Each one is a card with its picture(s) and a short text.
+//   images: one or more pictures. Put the files in /public (e.g. /projects/flightdelay/dashboard.png).
+//           With several, small tabs on the picture switch between them (labelled with the caption).
+//           An empty `src` shows an "image coming soon" placeholder.
 // The row and the screen disappear if this list is empty.
 export type OtherProject = {
   name: string;
   year: string;
   short: string; // one or two sentences
   tags: string[];
-  image: { src: string; caption: string };
+  images: { src: string; caption: string }[];
 };
 
 export const otherProjects: OtherProject[] = [
@@ -421,7 +422,7 @@ export const otherProjects: OtherProject[] = [
     short:
       "Two PyTorch neural networks that predict whether a flight will be delayed or overbooked, trained on real airline and weather data. A BART language model reads NASA incident reports and turns them into a delay-risk feature, and a Flask dashboard serves live predictions on an animated gauge.",
     tags: ["Python", "PyTorch", "scikit-learn", "pandas", "Hugging Face", "Flask", "JavaScript"],
-    image: { src: "/projects/flightdelay/dashboard.png", caption: "Prediction dashboard" },
+    images: [{ src: "/projects/flightdelay/dashboard.png", caption: "Prediction dashboard" }],
   },
   {
     name: "OHL Attendance Predictor",
@@ -429,7 +430,18 @@ export const otherProjects: OtherProject[] = [
     short:
       "Built for the real OH Leuven football club: an XGBoost model that predicts how many fans will come to a home match from the opponent, weather, promotions, holidays and media buzz, so the club can plan staff and catering ahead. Served through a Flask web app.",
     tags: ["Python", "XGBoost", "scikit-learn", "pandas", "SciPy", "Flask", "Jupyter"],
-    image: { src: "/projects/ohl_attendance/dashboard.png", caption: "Attendance predictor" },
+    images: [{ src: "/projects/ohl_attendance/dashboard.png", caption: "Attendance predictor" }],
+  },
+  {
+    name: "Sabotage Runners",
+    year: "2024–2025",
+    short:
+      "A two-player, same-keyboard pixel-art race: reach the other player's spawn first while knocking your rival back and sabotaging them with power-ups that freeze, slow, mirror their controls or teleport them home. First to 3 wins, across two maps.",
+    tags: ["Python", "Pygame", "OOP", "PyInstaller", "Git"],
+    images: [
+      { src: "/projects/sabotagerunners/gameplay.png", caption: "Gameplay" },
+      { src: "/projects/sabotagerunners/mainmenu.png", caption: "Main menu" },
+    ],
   },
 ];
 

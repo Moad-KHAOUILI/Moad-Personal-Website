@@ -2,8 +2,8 @@
 
 // ---------------------------------------------------------------------------
 // OTHER PROJECTS screen, reached from the bottom of the Projects list: the
-// smaller projects as a grid of cards, each with one image, a short text and
-// its tags. Arrow keys move the highlight, clicking an image enlarges it.
+// smaller projects as a grid of cards, each with its picture(s), a short text
+// and its tags. Arrow keys move the highlight, clicking a picture enlarges it.
 // ---------------------------------------------------------------------------
 
 import { useEffect, useState } from "react";
@@ -16,11 +16,20 @@ import { useListNav } from "@/lib/useListNav";
 
 export default function OtherProjects({ active, onBack }: { active: boolean; onBack: () => void }) {
   const [zoom, setZoom] = useState<string | null>(null);
+  // Which picture each card is showing
+  const [shots, setShots] = useState<number[]>(() => otherProjects.map(() => 0));
+  const shown = (i: number) => otherProjects[i].images[shots[i]];
+  const showShot = (i: number, j: number) => {
+    if (j === shots[i]) return;
+    setShots(shots.map((s, k) => (k === i ? j : s)));
+    sfx.move();
+  };
+
   const { sel, hover } = useListNav({
     count: otherProjects.length,
     active: active && !zoom,
     onBack,
-    onConfirm: (i) => otherProjects[i].image.src && setZoom(otherProjects[i].image.src),
+    onConfirm: (i) => shown(i).src && setZoom(shown(i).src),
   });
 
   // Esc closes the enlarged image (the list navigation is paused while it's open)
@@ -49,17 +58,36 @@ export default function OtherProjects({ active, onBack }: { active: boolean; onB
               className={`panel side-card flex flex-col ${sel === i ? "is-sel" : ""}`}
               style={{ animationDelay: `${0.06 * i + 0.1}s` }}
             >
-              {/* The one image (click to enlarge), or a placeholder until it's added */}
-              <div className="side-card-media">
-                {p.image.src ? (
-                  <button onClick={() => setZoom(p.image.src)} className="block h-full w-full cursor-zoom-in">
+              {/* The picture (click to enlarge), or a placeholder until it's added. With several
+                  pictures, slanted tabs over the bottom-left corner switch between them */}
+              <div className="side-card-media relative">
+                {shown(i).src ? (
+                  <button onClick={() => setZoom(shown(i).src)} className="absolute inset-0 block cursor-zoom-in">
                     {/* eslint-disable-next-line @next/next/no-img-element -- any size from /public */}
-                    <img src={p.image.src} alt={p.image.caption} className="h-full w-full object-cover object-top" />
+                    <img
+                      key={shots[i]}
+                      src={shown(i).src}
+                      alt={shown(i).caption}
+                      className="side-card-img h-full w-full object-cover object-top"
+                    />
                   </button>
                 ) : (
-                  <div className="flex h-full flex-col items-center justify-center gap-1 text-center">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-center">
                     <span className="font-display text-4xl text-cyan/60">▣</span>
                     <span className="text-sm text-ice/60">Image coming soon</span>
+                  </div>
+                )}
+                {p.images.length > 1 && (
+                  <div className="absolute bottom-3 left-3 flex gap-2">
+                    {p.images.map((img, j) => (
+                      <button
+                        key={img.src}
+                        onClick={() => showShot(i, j)}
+                        className={`shot-tab ${shots[i] === j ? "is-sel" : ""}`}
+                      >
+                        {img.caption}
+                      </button>
+                    ))}
                   </div>
                 )}
               </div>
@@ -81,7 +109,7 @@ export default function OtherProjects({ active, onBack }: { active: boolean; onB
         </div>
       </FitScreen>
 
-      <Prompts confirmLabel={otherProjects[sel]?.image.src ? "Enlarge" : undefined} onBack={onBack} />
+      <Prompts confirmLabel={shown(sel)?.src ? "Enlarge" : undefined} onBack={onBack} />
 
       {/* Enlarged image over everything; click anywhere to close */}
       {zoom && (
