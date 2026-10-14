@@ -404,6 +404,7 @@ export const projects: Project[] = [
 // OTHER PROJECTS: smaller projects, reached from the "Other projects" row at the
 // bottom of the Projects list. Each one is a card with its picture(s) and a short text.
 //   images: one or more pictures. Put the files in /public (e.g. /projects/flightdelay/dashboard.png).
+//   repo: optional link to the code (a "GitHub" button on the card).
 //           With several, small tabs on the picture switch between them (labelled with the caption).
 //           An empty `src` shows an "image coming soon" placeholder.
 // The row and the screen disappear if this list is empty.
@@ -413,6 +414,7 @@ export type OtherProject = {
   short: string; // one or two sentences
   tags: string[];
   images: { src: string; caption: string }[];
+  repo?: string; // optional GitHub link, shown as a button on the card
 };
 
 export const otherProjects: OtherProject[] = [
@@ -435,6 +437,7 @@ export const otherProjects: OtherProject[] = [
   {
     name: "Sabotage Runners",
     year: "2024–2025",
+    repo: "https://github.com/Moad-KHAOUILI/sabotage-runners",
     short:
       "A two-player, same-keyboard pixel-art race: reach the other player's spawn first while knocking your rival back and sabotaging them with power-ups that freeze, slow, mirror their controls or teleport them home. First to 3 wins, across two maps.",
     tags: ["Python", "Pygame", "OOP", "PyInstaller", "Git"],

@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import FitScreen from "@/components/FitScreen";
 import Prompts from "@/components/Prompts";
 import ScreenTitle from "@/components/ScreenTitle";
+import SocialIcon from "@/components/SocialIcon";
 import { otherProjects } from "@/lib/data";
 import { sfx } from "@/lib/sfx";
 import { useListNav } from "@/lib/useListNav";
@@ -103,6 +104,12 @@ export default function OtherProjects({ active, onBack }: { active: boolean; onB
                     <span key={t} className="chip skill-chip">{t}</span>
                   ))}
                 </div>
+                {p.repo && (
+                  <a href={p.repo} target="_blank" rel="noreferrer" className="p3-btn repo-btn mt-4 self-start">
+                    <SocialIcon icon="github" className="h-5 w-5" />
+                    View on GitHub
+                  </a>
+                )}
               </div>
             </div>
           ))}
