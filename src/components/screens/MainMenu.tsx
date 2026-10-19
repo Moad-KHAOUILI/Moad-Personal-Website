@@ -3,14 +3,13 @@
 // ---------------------------------------------------------------------------
 // Main menu, in the style of Persona 3 Reload's pause menu: huge slanted
 // italic options stacked in a staircase. The selected one gets the white and
-// cyan highlight bars. Your name sits faintly in the background, a mini
-// "Who I Am" card sits on the right, and a help bar at the bottom describes
+// cyan highlight bars. Your name sits faintly in the background, a featured
+// projects slideshow sits on the right, and a help bar at the bottom describes
 // the selected option.
 // ---------------------------------------------------------------------------
 
-import Motto from "@/components/Motto";
+import ProjectShowcase from "@/components/ProjectShowcase";
 import Prompts from "@/components/Prompts";
-import { profile } from "@/lib/data";
 import { useListNav } from "@/lib/useListNav";
 import type { Screen } from "@/app/page";
 
@@ -25,32 +24,19 @@ type Props = {
   active: boolean;
   initial: number; // remembered selection, so coming back lands on the item you left from
   onSelect: (s: Screen, index: number) => void;
+  onOpenProject: (index: number) => void; // a project from the featured slideshow
 };
 
-export default function MainMenu({ active, initial, onSelect }: Props) {
+export default function MainMenu({ active, initial, onSelect, onOpenProject }: Props) {
   const { sel, hover } = useListNav({ count: ITEMS.length, active, initial, onConfirm: (i) => onSelect(ITEMS[i].id, i) });
 
   return (
     <div className="menu-screen relative h-full w-full">
 
-      {/* Mini "Who I Am" card, on the right, a little above the middle:
-          name, role and motto on the left, the photo on the right.
+      {/* Featured projects slideshow, on the right, a little above the middle.
           Positioned by a wrapper, since .panel sets its own position */}
-      <div className="mini-wrap absolute right-[5vw] top-[22vh] hidden md:block">
-        <div className="panel intro-card mini-card flex items-center gap-6">
-          <div className="flex flex-col">
-            <h1 className="font-display text-4xl font-black uppercase italic leading-none">
-              {profile.firstName} <span className="text-cyan">{profile.lastName}</span>
-            </h1>
-            <div className="strip mt-3 self-start">{profile.role}</div>
-            <Motto className="motto-sm mt-5" />
-          </div>
-          <div className="portrait portrait-sm">
-            <div className="portrait-frame">
-              <img src={profile.photo} alt={`${profile.firstName} ${profile.lastName}`} />
-            </div>
-          </div>
-        </div>
+      <div className="mini-wrap absolute right-[5vw] top-[18vh] hidden md:block">
+        <ProjectShowcase onOpen={onOpenProject} />
       </div>
 
       {/* The menu, on the left: slanted, each option shifted further right (staircase) */}

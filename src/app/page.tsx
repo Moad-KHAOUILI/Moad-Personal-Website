@@ -95,6 +95,11 @@ export default function Home() {
               setMenuIndex(i);
               go(to);
             }}
+            onOpenProject={(i) => {
+              setMenuIndex(1); // coming back lands on "Projects"
+              setProjectIndex(i);
+              go("project");
+            }}
           />
         )}
         {screen === "about" && <About active={active} onBack={back} />}
