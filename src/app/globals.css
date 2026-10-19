@@ -1496,7 +1496,6 @@ html {
     top: 13rem; /* (in zoomed units, so it clears the date) */
     right: 0;
     left: 0;
-    zoom: 0.66;
   }
   .menu {
     top: 60%;
@@ -1600,7 +1599,6 @@ html {
   /* Main menu: a smaller Who I Am card */
   .mini-wrap {
     top: 16vh;
-    zoom: 0.72;
   }
   .help-bar {
     font-size: 1rem;
@@ -1650,7 +1648,33 @@ html {
     position: static;
     display: flex;
     transform: none;
-    zoom: 0.75;
+  }
+  /* The featured projects box at real phone sizes (not CSS zoom, which iPhones may ignore):
+     narrower, tighter, with smaller text */
+  .menu-screen .showcase {
+    width: min(17rem, 72vw);
+    padding: 0.8rem 0.9rem 0.9rem;
+    border-left-width: 4px;
+  }
+  .menu-screen .showcase .panel-label,
+  .menu-screen .showcase-count {
+    font-size: 0.7rem;
+  }
+  .menu-screen .showcase-media {
+    margin-top: 0.45rem;
+    box-shadow: 0.3rem 0.3rem 0 var(--color-royal);
+  }
+  .menu-screen .showcase-text {
+    margin-top: 0.55rem;
+  }
+  .menu-screen .showcase h2 {
+    font-size: 1.35rem;
+  }
+  .menu-screen .showcase p {
+    font-size: 0.72rem;
+  }
+  .menu-screen .showcase-pip {
+    height: 0.4rem;
   }
   /* The menu: a straight, centred column right under the card (no tilt, no staircase),
      sized from the screen width so the longest option always fits */
@@ -1710,5 +1734,16 @@ html {
   }
   .menu-screen .menu-item {
     font-size: min(2.6rem, 11vh, 5vw);
+  }
+  /* A shorter featured projects box (a flatter picture, no tagline), so it stays clear of the
+     help bar on short screens */
+  .menu-screen .showcase {
+    width: 15rem;
+  }
+  .menu-screen .showcase-media {
+    aspect-ratio: 21 / 9;
+  }
+  .menu-screen .showcase p {
+    display: none;
   }
 }
