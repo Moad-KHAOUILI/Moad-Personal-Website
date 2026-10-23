@@ -917,9 +917,12 @@ html {
   background: #fff;
 }
 
-/* Featured projects slideshow on the main menu (see ProjectShowcase.tsx) */
+/* Featured projects slideshow on the main menu (see ProjectShowcase.tsx).
+   Grows with the window: as wide as the room the menu leaves on the right (the menu takes
+   ~56% on narrow windows), but never so tall that it runs into the help bar on short
+   windows (the picture is 16:9) */
 .showcase {
-  width: 27rem;
+  width: clamp(16rem, min(39vw - 1rem, 146vh - 25rem), 56rem);
   padding: 1.3rem 1.5rem 1.4rem;
   border-left: 6px solid var(--color-cyan);
 }
@@ -991,6 +994,13 @@ html {
   margin-top: 0.9rem;
   animation: fade-up 0.4s ease-out 0.1s backwards;
 }
+/* The name and tagline grow a little with the box, on big screens */
+.showcase h2 {
+  font-size: clamp(1.875rem, 2.2vw, 2.6rem);
+}
+.showcase p {
+  font-size: clamp(0.875rem, 0.85vw, 1.05rem);
+}
 /* Progress segments: done ones are cyan, the current one fills up over 5s (then the slide
    changes). Hovering the box pauses the fill */
 .showcase-pip {
@@ -1015,6 +1025,23 @@ html {
 }
 .showcase:hover .showcase-pip.is-sel span {
   animation-play-state: paused;
+}
+/* Tall desktop windows (a monitor turned sideways, a narrow browser window): the box moves
+   to the top, centred, below the date, and the menu sits below it, as on portrait phones */
+@media (orientation: portrait) and (min-width: 48rem) and (hover: hover) {
+  .mini-wrap {
+    display: flex;
+    justify-content: center;
+    top: max(9vh, 6.5rem);
+    right: 0;
+    left: 0;
+  }
+  .showcase {
+    width: min(80vw, 40rem, 40vh);
+  }
+  .menu {
+    top: 70%;
+  }
 }
 @keyframes showcase-fill {
   from {
@@ -1652,7 +1679,7 @@ html {
   /* The featured projects box at real phone sizes (not CSS zoom, which iPhones may ignore):
      narrower, tighter, with smaller text */
   .menu-screen .showcase {
-    width: min(17rem, 72vw);
+    width: min(20rem, 84vw, 42vh); /* (42vh keeps it and the menu on screen on short phones) */
     padding: 0.8rem 0.9rem 0.9rem;
     border-left-width: 4px;
   }
@@ -1738,7 +1765,7 @@ html {
   /* A shorter featured projects box (a flatter picture, no tagline), so it stays clear of the
      help bar on short screens */
   .menu-screen .showcase {
-    width: 15rem;
+    width: min(19rem, 40vw);
   }
   .menu-screen .showcase-media {
     aspect-ratio: 21 / 9;

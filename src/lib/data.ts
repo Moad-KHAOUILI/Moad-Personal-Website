@@ -24,19 +24,19 @@ export const about = {
   ],
   chapters: [
     {
-      title: "Origin",
+      title: "Background",
       text: "Hello! I'm a full-stack developer student who loves building things for the web. It all started with one simple website. The moment it came to life on screen, I was hooked on everything the web could do.",
     },
     {
-      title: "The Craft",
+      title: "What I Do",
       text: "Today I build accessible, scalable applications with modern tools: React for interactive frontends that feel alive, and Spring Boot for backend services that hold strong behind them.",
     },
     {
-      title: "Off Hours",
+      title: "Interests",
       text: "When I'm not coding, I'm usually studying, losing on Valorant, or watching a Marvel movie.",
     },
     {
-      title: "Next Quest",
+      title: "Goals",
       text: "I'm always looking for the next bond to forge: a team to join, a problem worth solving, a project worth building. If that sounds like you, please feel free to contact me.",
     },
   ],
