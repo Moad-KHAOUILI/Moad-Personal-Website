@@ -23,7 +23,7 @@ const sans = Space_Grotesk({ weight: ["400", "500", "600"], subsets: ["latin"], 
 const dialogue = Chakra_Petch({ weight: ["500", "600"], subsets: ["latin"], variable: "--font-dialogue-src" });
 
 export const metadata: Metadata = {
-  title: "Moad Khaouili",
+  title: { default: "Moad Khaouili", template: "%s | Moad Khaouili" }, // pages set their own title, e.g. "About Me | Moad Khaouili"
   description: "Personal website and projects of Moad Khaouili.",
 };
 

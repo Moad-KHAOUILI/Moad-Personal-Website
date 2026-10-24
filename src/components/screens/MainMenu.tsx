@@ -11,24 +11,24 @@
 import ProjectShowcase from "@/components/ProjectShowcase";
 import Prompts from "@/components/Prompts";
 import { useListNav } from "@/lib/useListNav";
-import type { Screen } from "@/app/page";
-
-const ITEMS: { id: Screen; label: string; desc: string }[] = [
-  { id: "about", label: "About Me", desc: "The story so far. Who I am, told my way." },
-  { id: "projects", label: "Projects", desc: "Browse the things I've built." },
-  { id: "stats", label: "Technical Skills", desc: "The technologies and tools I work with." },
-  { id: "social", label: "Contact Me", desc: "Forge a bond. Reach out or find me on other platforms." },
+const ITEMS: { path: string; label: string; desc: string }[] = [
+  { path: "/about", label: "About Me", desc: "The story so far. Who I am, told my way." },
+  { path: "/projects", label: "Projects", desc: "Browse the things I've built." },
+  { path: "/skills", label: "Technical Skills", desc: "The technologies and tools I work with." },
+  { path: "/contact", label: "Contact Me", desc: "Forge a bond. Reach out or find me on other platforms." },
 ];
 
 type Props = {
   active: boolean;
-  initial: number; // remembered selection, so coming back lands on the item you left from
-  onSelect: (s: Screen, index: number) => void;
+  from: string | null; // the page we came from, so coming back lands on the item you left from
+  onSelect: (path: string) => void;
   onOpenProject: (index: number) => void; // a project from the featured slideshow
 };
 
-export default function MainMenu({ active, initial, onSelect, onOpenProject }: Props) {
-  const { sel, hover } = useListNav({ count: ITEMS.length, active, initial, onConfirm: (i) => onSelect(ITEMS[i].id, i) });
+export default function MainMenu({ active, from, onSelect, onOpenProject }: Props) {
+  // A project's page counts as "Projects", so coming back from one lands there
+  const initial = Math.max(0, ITEMS.findIndex((item) => from === item.path || from?.startsWith(item.path + "/")));
+  const { sel, hover } = useListNav({ count: ITEMS.length, active, initial, onConfirm: (i) => onSelect(ITEMS[i].path) });
 
   return (
     <div className="menu-screen relative h-full w-full">
@@ -44,9 +44,9 @@ export default function MainMenu({ active, initial, onSelect, onOpenProject }: P
       <nav className="menu absolute left-[6vw] top-1/2">
         {ITEMS.map((item, i) => (
           <button
-            key={item.id}
+            key={item.path}
             onMouseEnter={() => hover(i)}
-            onClick={() => onSelect(item.id, i)}
+            onClick={() => onSelect(item.path)}
             className={`menu-item ${sel === i ? "is-sel" : ""}`}
             style={{ marginLeft: `${i * 2.2}rem`, animationDelay: `${0.08 * i + 0.1}s` }}
           >

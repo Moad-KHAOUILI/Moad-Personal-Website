@@ -18,9 +18,9 @@ export const profile = {
 export const about = {
   motto: ["Every detail", "deserves its", "place."],
   languages: [
-    { name: "Arabic", level: "Native" },
     { name: "English", level: "C1", note: "IELTS" },
     { name: "French", level: "B2" },
+    { name: "Arabic", level: "Native" },
   ],
   chapters: [
     {
@@ -49,6 +49,7 @@ export const about = {
 //          and set `src`. An empty `src` shows a "coming soon" placeholder with the caption.
 //   links: buttons in the overview (e.g. GitHub repo, live demo). Leave empty to hide.
 export type Project = {
+  slug: string; // the project's web address: /projects/<slug>. Lowercase, dashes instead of spaces
   name: string;
   year: string;
   short: string; // quick-view summary on the list screen
@@ -66,6 +67,7 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    slug: "campusconnect",
     name: "CampusConnect",
     year: "2025–2026",
     short:
@@ -150,6 +152,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "glackit-flow-engine",
     name: "GlacKIT Flow Engine",
     year: "2025",
     short:
@@ -234,6 +237,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "battlebots",
     name: "BattleBots",
     year: "2026",
     short:
@@ -322,6 +326,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "minecraft-world-generation",
     name: "Minecraft World Generation",
     year: "2026",
     short:

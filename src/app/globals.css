@@ -1774,3 +1774,42 @@ html {
     display: none;
   }
 }
+
+/* ===========================================================================
+   404 page (see not-found.tsx)
+   =========================================================================== */
+.nf-screen {
+  padding: 3rem 1.25rem 4.5rem;
+}
+@media (min-width: 768px) {
+  .nf-screen {
+    padding: 4rem 3rem 5rem;
+  }
+}
+/* The title block slides in; the tilt is on an inner element so the animation's
+   transform doesn't fight it */
+.nf-title {
+  animation: slide-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
+}
+.nf-tilt {
+  transform: rotate(-4deg);
+}
+/* The "404": the screen title's look, much bigger. Sized by both width and
+   height, so it fits phones, sideways phones and big monitors alike */
+.nf-code {
+  font-family: var(--font-display);
+  font-size: clamp(5.5rem, min(34vw, 30vh), 15rem);
+  font-weight: 900;
+  font-style: italic;
+  line-height: 0.85;
+  padding-right: 0.06em; /* room for the italic overhang and shadow, keeps it optically centered */
+  text-shadow: 0.04em 0.04em 0 var(--color-royal);
+}
+.nf-strip {
+  margin-top: 0.25rem;
+  font-size: clamp(0.9rem, 2.5vw, 1.25rem);
+  padding-left: 1.1rem; /* evens out the slanted right edge, so the text sits centered */
+}
+.nf-text {
+  animation: slide-in 0.5s 0.15s cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
+}
